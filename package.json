@@ -1,0 +1,25 @@
+{
+  "name": "2.shoppingcart",
+  "version": "1.0.0",
+  "description": "Shopping Cart with Node.js, Express, MongoDB",
+  "main": "app.js",
+  "dependencies": {
+    "ejs": "^3.1.3",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.18"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Neha218/ShoppingCart.git"
+  },
+  "author": "Neha Pawar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Neha218/ShoppingCart/issues"
+  },
+  "homepage": "https://github.com/Neha218/ShoppingCart#readme"
+}
