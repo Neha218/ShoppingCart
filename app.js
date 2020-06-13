@@ -37,6 +37,13 @@ app.set("view engine", "ejs");
 // Set static folder
 app.set(express.static(path.join(__dirname, "public")));
 
+// Set routes
+const pages = require("./routes/pages.js");
+app.use("/", pages);
+
+const adminPages = require("./routes/adminPages.js");
+app.use("/admin/pages", adminPages);
+
 // Start the server
 var port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server started on port ${port}`));
