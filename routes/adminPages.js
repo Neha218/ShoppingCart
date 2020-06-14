@@ -100,5 +100,20 @@ router.post("/reorderpage", (req, res) => {
   }
 });
 
+/*
+ * Get edit page
+ */
+router.get("/editpage/:slug", (req, res) => {
+  Page.findOne({ slug: req.params.slug }, (err, page) => {
+    if (err) return console.log(err);
+    res.render("admin/editPage", {
+      title: page.title,
+      slug: page.slug,
+      content: page.content,
+      id: page._id
+    });
+  });
+});
+
 // Exports
 module.exports = router;
