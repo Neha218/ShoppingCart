@@ -24,5 +24,31 @@ router.get("/addpage", (req, res) => {
   });
 });
 
+/*
+ * Post add page
+ */
+router.post("/addpage", (req, res) => {
+  req.checkBody("title", "Title must have a value.").notEmpty();
+  req.checkBody("content", "Content must have a value.").notEmpty();
+
+  var title = req.body.title;
+  var slug = req.body.slug;
+  if (slug == "") slug = title.replace(/\s+/g, "-").toLowerCase();
+  var content = req.body.content;
+
+  var errors = req.validationErrors();
+
+  if (errors) {
+    res.render("admin/addPage", {
+      errors,
+      title,
+      slug,
+      content
+    });
+  } else {
+    console.log("Success");
+  }
+});
+
 // Exports
 module.exports = router;
