@@ -23,7 +23,10 @@ const config = require("./config/database");
 //   });
 /**************************************************************************************************/
 
-mongoose.connect(config.database);
+mongoose.connect(config.database, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true
+});
 var db = mongoose.connection;
 db.on("error", console.error.bind(console, "Connection Error:"));
 db.once("open", () => {

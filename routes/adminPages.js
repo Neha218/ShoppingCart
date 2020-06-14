@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
+// Get page model
+const Page = require("../models/page");
+
 // Now this '/' in get method points to the path /admin/pages in the app.js
 // If this path in the get is '/test' then it will point to '/admin/pages/test'
 /*
@@ -46,7 +49,28 @@ router.post("/addpage", (req, res) => {
       content
     });
   } else {
-    console.log("Success");
+    Page.findOne({ slug: slug }, (err, page) => {
+      if (page) {
+        req.flash("danger", "Page slug exist, choose another.");
+        res.render("admin/addPage", {
+          title,
+          slug,
+          content
+        });
+      } else {
+        var page = new Page({
+          title,
+          slug,
+          content,
+          sorting: 0
+        });
+        page.save(err => {
+          if (err) return console.log(err);
+          req.flash("Success", "Page added!");
+          res.redirect("/admin/pages");
+        });
+      }
+    });
   }
 });
 
