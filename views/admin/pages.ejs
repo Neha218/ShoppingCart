@@ -1,0 +1,31 @@
+<%- include("../_layouts/adminHeader") %>
+<h2 class="page-title">Pages</h2>
+<a href="/admin/pages/addpage" class="btn btn-primary">Add a new page</a>
+<br /><br />
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% pages.forEach((page) => { %>
+    <tr>
+      <td><%= page.title %></td>
+      <td><a href="/admin/pages/editPage/<%= page.slug %>">Edit</a></td>
+      <% if (page.slug == "home") { %>
+      <td></td>
+      <% } else { %>
+      <td><a href="/admin/pages/deletePage/<%= page._id %>">Delete</a></td>
+      <% } %>
+    </tr>
+    <% page %> <% }); %>
+  </tbody>
+</table>
+
+<br /><br />
+
+<%- include("../_layouts/adminFooter") %>
