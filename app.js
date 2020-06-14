@@ -57,24 +57,26 @@ app.use(
   })
 );
 
+/***********************************************ISSUE********************************************/
 // Express validator middleware
-app.use(
-  expressValidator({
-    errorFormatter: (param, msg, value) => {
-      var namespace = param.split("."),
-        root = namespace.shift(),
-        formParam = root;
-      while (namespace.length) {
-        formParam += "[" + namespace.shift() + "]";
-      }
-      return {
-        param: formParam,
-        msg: msg,
-        value: value
-      };
-    }
-  })
-);
+// app.use(
+//   expressValidator({
+//     errorFormatter: (param, msg, value) => {
+//       var namespace = param.split("."),
+//         root = namespace.shift(),
+//         formParam = root;
+//       while (namespace.length) {
+//         formParam += "[" + namespace.shift() + "]";
+//       }
+//       return {
+//         param: formParam,
+//         msg: msg,
+//         value: value
+//       };
+//     }
+//   })
+// );
+/***********************************************ISSUE********************************************/
 
 // Express messages middleware
 app.use(require("connect-flash")());
