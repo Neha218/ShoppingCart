@@ -25,7 +25,8 @@ const config = require("./config/database");
 
 mongoose.connect(config.database, {
   useUnifiedTopology: true,
-  useNewUrlParser: true
+  useNewUrlParser: true,
+  useFindAndModify: true
 });
 var db = mongoose.connection;
 db.on("error", console.error.bind(console, "Connection Error:"));
@@ -41,7 +42,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 // Set static folder
-app.set(express.static(path.join(__dirname, "public")));
+app.use(express.static("public"));
 
 // Set global errors variable
 app.locals.errors = null;
@@ -63,7 +64,6 @@ app.use(
   })
 );
 
-/***********************************************ISSUE********************************************/
 // Express validator middleware
 app.use(
   expressValidator({
@@ -82,7 +82,6 @@ app.use(
     }
   })
 );
-/***********************************************ISSUE********************************************/
 
 // Express messages middleware
 app.use(require("connect-flash")());
@@ -99,5 +98,5 @@ const adminPages = require("./routes/adminPages.js");
 app.use("/admin/pages", adminPages);
 
 // Start the server
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server started on port ${port}`));

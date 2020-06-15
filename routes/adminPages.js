@@ -166,5 +166,16 @@ router.post("/editpage/:slug", (req, res) => {
   }
 });
 
+/*
+ * Get delete page
+ */
+router.get("/deletepage/:id", (req, res) => {
+  Page.findByIdAndRemove(req.params.id, err => {
+    if (err) return console.log(err);
+    req.flash("success", "Page deleted successfully!");
+    res.redirect("/admin/pages/");
+  });
+});
+
 // Exports
 module.exports = router;
