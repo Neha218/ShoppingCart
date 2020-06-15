@@ -3,7 +3,7 @@
 <a href="/admin/pages" class="btn btn-primary">Back to all pages</a>
 <br /><br />
 
-<form method="POST" action="/admin/pages/editpage/<%= slug %>">
+<form method="POST" action="/admin/pages/editpage/<%= id %>">
   <div class="form-group">
     <label for="">Title</label>
     <input
@@ -39,7 +39,6 @@
 <%= content %></textarea
     >
   </div>
-  <input type="hidden" name="id" value="<%= id %>" />
 
   <button class="btn btn-default">Submit</button>
 </form>
