@@ -72,7 +72,7 @@ router.post("/addpage", (req, res) => {
         });
         page.save(err => {
           if (err) return console.log(err);
-          req.flash("Success", "Page added!");
+          req.flash("success", "Page added successfully!");
           res.redirect("/admin/pages");
         });
       }
@@ -113,6 +113,57 @@ router.get("/editpage/:slug", (req, res) => {
       id: page._id
     });
   });
+});
+
+/*
+ * Post edit page
+ */
+router.post("/editpage/:slug", (req, res) => {
+  req.checkBody("title", "Title must have a value.").notEmpty();
+  req.checkBody("content", "Content must have a value.").notEmpty();
+
+  var title = req.body.title;
+  var slug = req.body.slug;
+  if (slug == "") slug = title.replace(/\s+/g, "-").toLowerCase();
+  var content = req.body.content;
+  var id = req.body.id;
+
+  var errors = req.validationErrors();
+
+  if (errors) {
+    res.render("admin/editPage", {
+      errors,
+      title,
+      slug,
+      content,
+      id
+    });
+  } else {
+    Page.findOne({ slug: slug, _id: { $ne: id } }, (err, page) => {
+      if (page) {
+        req.flash("danger", "Page slug exist, choose another.");
+        res.render("admin/editPage", {
+          title,
+          slug,
+          content,
+          id
+        });
+      } else {
+        Page.findById(id, (err, page) => {
+          if (err) return console.log(err);
+          page.title = title;
+          page.slug = slug;
+          page.content = content;
+
+          page.save(err => {
+            if (err) return console.log(err);
+            req.flash("success", "Page edited successfully!");
+            res.redirect("/admin/pages/editpage/" + page.slug);
+          });
+        });
+      }
+    });
+  }
 });
 
 // Exports
