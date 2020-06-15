@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const expressValidator = require("express-validator");
+const fileUpload = require("express-fileupload");
 
 const config = require("./config/database");
 
@@ -46,6 +47,9 @@ app.use(express.static("public"));
 
 // Set global errors variable
 app.locals.errors = null;
+
+// Express fileUpload middleware
+app.use(fileUpload());
 
 // Body Parser Middleware
 //
@@ -99,6 +103,9 @@ app.use("/admin/pages", adminPages);
 
 const adminCategories = require("./routes/adminCategories");
 app.use("/admin/categories", adminCategories);
+
+const adminProducts = require("./routes/adminProducts");
+app.use("/admin/products", adminProducts);
 
 // Start the server
 var port = process.env.PORT || 5000;
