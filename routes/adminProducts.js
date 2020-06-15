@@ -7,19 +7,26 @@ const resizeImg = require("resize-img");
 // Get product model
 const Product = require("../models/product");
 
+// Get category model
+const Category = require("../models/category");
+
 // Now this '/' in get method points to the path /admin/pages in the app.js
 // If this path in the get is '/test' then it will point to '/admin/pages/test'
 /*
- * Get pages index
+ * Get products index
  */
 router.get("/", (req, res) => {
-  Page.find({})
-    .sort({ sorting: 1 })
-    .exec((err, pages) => {
-      res.render("admin/pages", {
-        pages
-      });
+  var count;
+  Product.count((err, c) => {
+    count = c;
+  });
+
+  Product.find((err, products) => {
+    res.render("admin/products", {
+      products,
+      count
     });
+  });
 });
 
 /*
