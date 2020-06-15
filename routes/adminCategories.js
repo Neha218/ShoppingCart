@@ -19,60 +19,47 @@ router.get("/", (req, res) => {
 });
 
 /*
- * Get add page
+ * Get add category
  */
-router.get("/addpage", (req, res) => {
+router.get("/addcategory", (req, res) => {
   var title = "";
-  var slug = "";
-  var content = "";
-  res.render("admin/addPage", {
-    title,
-    slug,
-    content
+  res.render("admin/addCategory", {
+    title
   });
 });
 
 /*
- * Post add page
+ * Post add category
  */
-router.post("/addpage", (req, res) => {
+router.post("/addcategory", (req, res) => {
   req.checkBody("title", "Title must have a value.").notEmpty();
-  req.checkBody("content", "Content must have a value.").notEmpty();
 
   var title = req.body.title;
-  var slug = req.body.slug;
-  if (slug == "") slug = title.replace(/\s+/g, "-").toLowerCase();
-  var content = req.body.content;
+  var slug = title.replace(/\s+/g, "-").toLowerCase();
 
   var errors = req.validationErrors();
 
   if (errors) {
-    res.render("admin/addPage", {
+    res.render("admin/addCategory", {
       errors,
-      title,
-      slug,
-      content
+      title
     });
   } else {
-    Page.findOne({ slug: slug }, (err, page) => {
-      if (page) {
-        req.flash("danger", "Page slug exist, choose another.");
-        res.render("admin/addPage", {
-          title,
-          slug,
-          content
+    Category.findOne({ slug: slug }, (err, cat) => {
+      if (cat) {
+        req.flash("danger", "Category title exist, choose another.");
+        res.render("admin/addCategory", {
+          title
         });
       } else {
-        var page = new Page({
+        var category = new Category({
           title,
-          slug,
-          content,
-          sorting: 100
+          slug
         });
-        page.save(err => {
+        category.save(err => {
           if (err) return console.log(err);
-          req.flash("success", "Page added successfully!");
-          res.redirect("/admin/pages");
+          req.flash("success", "Category added successfully!");
+          res.redirect("/admin/categories");
         });
       }
     });

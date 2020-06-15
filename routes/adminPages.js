@@ -41,7 +41,7 @@ router.post("/addpage", (req, res) => {
   req.checkBody("content", "Content must have a value.").notEmpty();
 
   var title = req.body.title;
-  var slug = req.body.slug;
+  var slug = req.body.slug.replace(/\s+/g, "-").toLowerCase();
   if (slug == "") slug = title.replace(/\s+/g, "-").toLowerCase();
   var content = req.body.content;
 
