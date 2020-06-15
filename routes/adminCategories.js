@@ -7,17 +7,15 @@ const Category = require("../models/category");
 // Now this '/' in get method points to the path /admin/pages in the app.js
 // If this path in the get is '/test' then it will point to '/admin/pages/test'
 /*
- * Get pages index
+ * Get categories index
  */
 router.get("/", (req, res) => {
-  res.send("cats index");
-  // Page.find({})
-  //   .sort({ sorting: 1 })
-  //   .exec((err, pages) => {
-  //     res.render("admin/pages", {
-  //       pages
-  //     });
-  //   });
+  Category.find((err, categories) => {
+    if (err) return console.log(err);
+    res.render("admin/categories", {
+      categories
+    });
+  });
 });
 
 /*
