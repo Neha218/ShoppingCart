@@ -17,7 +17,7 @@
     <% categories.forEach((cat) => { %>
     <tr>
       <td><%= cat.title %></td>
-      <td><a href="/admin/categories/editcategory/<%= cat.slug %>">Edit</a></td>
+      <td><a href="/admin/categories/editcategory/<%= cat._id %>">Edit</a></td>
       <td>
         <a
           class="confirmDeletion"

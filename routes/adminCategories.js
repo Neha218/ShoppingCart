@@ -52,11 +52,11 @@ router.post("/addcategory", (req, res) => {
           title
         });
       } else {
-        var category = new Category({
+        var cat = new Category({
           title,
           slug
         });
-        category.save(err => {
+        cat.save(err => {
           if (err) return console.log(err);
           req.flash("success", "Category added successfully!");
           res.redirect("/admin/categories");
@@ -67,84 +67,55 @@ router.post("/addcategory", (req, res) => {
 });
 
 /*
- * Post reorder pages
+ * Get edit category
  */
-router.post("/reorderpage", (req, res) => {
-  var ids = req.body["id[]"];
-  var count = 0;
-  for (var i = 0; i < ids.length; i++) {
-    var id = ids[i];
-    count++;
-    (count => {
-      Page.findById(id, (err, page) => {
-        page.sorting = count;
-        page.save(err => {
-          if (err) return console.log(err);
-        });
-      });
-    })(count);
-  }
-});
-
-/*
- * Get edit page
- */
-router.get("/editpage/:slug", (req, res) => {
-  Page.findOne({ slug: req.params.slug }, (err, page) => {
+router.get("/editcategory/:id", (req, res) => {
+  Category.findById(req.params.id, (err, cat) => {
     if (err) return console.log(err);
-    res.render("admin/editPage", {
-      title: page.title,
-      slug: page.slug,
-      content: page.content,
-      id: page._id
+    res.render("admin/editCategory", {
+      title: cat.title,
+      id: cat._id
     });
   });
 });
 
 /*
- * Post edit page
+ * Post edit category
  */
-router.post("/editpage/:slug", (req, res) => {
+router.post("/editcategory/:id", (req, res) => {
   req.checkBody("title", "Title must have a value.").notEmpty();
-  req.checkBody("content", "Content must have a value.").notEmpty();
 
   var title = req.body.title;
-  var slug = req.body.slug;
-  if (slug == "") slug = title.replace(/\s+/g, "-").toLowerCase();
-  var content = req.body.content;
-  var id = req.body.id;
+  var slug = title.replace(/\s+/g, "-").toLowerCase();
+  var id = req.params.id;
 
   var errors = req.validationErrors();
 
   if (errors) {
-    res.render("admin/editPage", {
+    res.render("admin/editCategory", {
       errors,
       title,
-      slug,
-      content,
       id
     });
   } else {
-    Page.findOne({ slug: slug, _id: { $ne: id } }, (err, page) => {
-      if (page) {
-        req.flash("danger", "Page slug exist, choose another.");
-        res.render("admin/editPage", {
+    Category.findOne({ slug: slug, _id: { $ne: id } }, (err, cat) => {
+      if (cat) {
+        req.flash("danger", "Category title exist, choose another.");
+        res.render("admin/editCategory", {
           title,
-          slug,
-          content,
           id
         });
       } else {
-        Page.findById(id, (err, page) => {
+        Category.findById(id, (err, cat) => {
           if (err) return console.log(err);
-          page.title = title;
-          page.slug = slug;
-          page.content = content;
 
-          page.save(err => {
+          cat.title = title;
+          cat.slug = slug;
+
+          cat.save(err => {
             if (err) return console.log(err);
-            req.flash("success", "Page edited successfully!");
-            res.redirect("/admin/pages/editpage/" + page.slug);
+            req.flash("success", "Category edited successfully!");
+            res.redirect("/admin/categories/editcategory/" + id);
           });
         });
       }
