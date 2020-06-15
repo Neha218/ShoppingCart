@@ -97,6 +97,9 @@ app.use("/", pages);
 const adminPages = require("./routes/adminPages.js");
 app.use("/admin/pages", adminPages);
 
+const adminCategories = require("./routes/adminCategories");
+app.use("/admin/categories", adminCategories);
+
 // Start the server
 var port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server started on port ${port}`));
