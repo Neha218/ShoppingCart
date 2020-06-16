@@ -17,7 +17,7 @@ const Category = require("../models/category");
  */
 router.get("/", (req, res) => {
   var count;
-  Product.count((err, c) => {
+  Product.countDocuments((err, c) => {
     count = c;
   });
 
@@ -30,16 +30,19 @@ router.get("/", (req, res) => {
 });
 
 /*
- * Get add page
+ * Get add product
  */
-router.get("/addpage", (req, res) => {
+router.get("/addproduct", (req, res) => {
   var title = "";
-  var slug = "";
-  var content = "";
-  res.render("admin/addPage", {
-    title,
-    slug,
-    content
+  var desc = "";
+  var price = "";
+  Category.find((err, categories) => {
+    res.render("admin/addProduct", {
+      title,
+      desc,
+      price,
+      categories
+    });
   });
 });
 
