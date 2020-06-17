@@ -18,16 +18,19 @@
     </tr>
   </thead>
   <tbody>
-    <% product.forEach((product) => { %>
+    <% products.forEach((product) => { %>
     <tr>
       <td><%= product.title %></td>
       <td>$<%= parseFloat(product.price).toFixed(2) %></td>
       <td><%= product.category %></td>
       <td>
         <% if(product.image == "") { %>
-        <img src="/image/noimage.png" alt="" />
+        <img id="imgThumb" src="/images/noimage.png" alt="" />
         <% } else { %>
-        <img src="/productImages/<%= product._id %>/<%= product.image %>" />
+        <img
+          id="imgThumb"
+          src="/productImages/<%= product._id %>/<%= product.image %>"
+        />
         <% } %>
       </td>
       <td><a href="/admin/products/editproduct/<%= product._id %>">Edit</a></td>

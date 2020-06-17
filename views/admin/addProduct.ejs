@@ -22,7 +22,7 @@
   <div class="form-group">
     <label for="">Description</label>
     <textarea
-      name="content"
+      name="desc"
       class="form-control"
       cols="30"
       rows="10"
@@ -54,7 +54,13 @@
 
   <div class="form-group">
     <label for="">Image</label>
-    <input type="file" class="form-control" name="image" id="img" />
+    <input
+      type="file"
+      class="form-control"
+      value="<%= image %>"
+      name="image"
+      id="img"
+    />
     <img src="#" id="imgPreview" alt="" />
   </div>
 
@@ -63,6 +69,7 @@
 <br /><br />
 
 <script>
+  /*********************************Error************************************************/
   // function readURL(input) {
   //   if (input.files && input.files[0]) {
   //     var reader = new FileReader();
@@ -79,21 +86,25 @@
   // $("#img").change(function() {
   // readURL(this);
   // });
+  /**************************************************************************************/
 
   document.querySelector("#img").addEventListener("change", function() {
     // user selected file
     var file = this.files[0];
+    if (file == undefined) {
+      _PREVIEW_URL = "#";
+    } else {
+      // validate file size
+      if (file.size > 2 * 1024 * 1024) {
+        alert("Error : Exceeded size 2MB");
+        return;
+      }
 
-    // validate file size
-    if (file.size > 2 * 1024 * 1024) {
-      alert("Error : Exceeded size 2MB");
-      return;
+      // validation is successful
+
+      // object url
+      _PREVIEW_URL = URL.createObjectURL(file);
     }
-
-    // validation is successful
-
-    // object url
-    _PREVIEW_URL = URL.createObjectURL(file);
 
     // set src of image and show
     document.querySelector("#imgPreview").setAttribute("src", _PREVIEW_URL);

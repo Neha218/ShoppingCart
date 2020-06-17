@@ -36,58 +36,109 @@ router.get("/addproduct", (req, res) => {
   var title = "";
   var desc = "";
   var price = "";
+  var image = "";
   Category.find((err, categories) => {
     res.render("admin/addProduct", {
       title,
       desc,
       price,
+      image,
       categories
     });
   });
 });
 
 /*
- * Post add page
+ * Post add product
  */
-router.post("/addpage", (req, res) => {
+router.post("/addproduct", (req, res) => {
+  if (!req.files) {
+    imageFile = "";
+  }
+  if (req.files) {
+    var imageFile =
+      typeof req.files.image !== "undefined" ? req.files.image.name : "";
+  }
+
   req.checkBody("title", "Title must have a value.").notEmpty();
-  req.checkBody("content", "Content must have a value.").notEmpty();
+  req.checkBody("desc", "Description must have a value.").notEmpty();
+  req.checkBody("price", "Price must have a value.").isDecimal();
+  req.checkBody("image", "You must uplaod an image.").isImage(imageFile);
 
   var title = req.body.title;
-  var slug = req.body.slug.replace(/\s+/g, "-").toLowerCase();
-  if (slug == "") slug = title.replace(/\s+/g, "-").toLowerCase();
-  var content = req.body.content;
+  var slug = title.replace(/\s+/g, "-").toLowerCase();
+  var desc = req.body.desc;
+  var price = req.body.price;
+  var category = req.body.category;
 
   var errors = req.validationErrors();
 
   if (errors) {
-    res.render("admin/addPage", {
-      errors,
-      title,
-      slug,
-      content
+    Category.find((err, categories) => {
+      res.render("admin/addProduct", {
+        errors,
+        title,
+        desc,
+        price,
+        image: imageFile,
+        categories
+      });
     });
   } else {
-    Page.findOne({ slug: slug }, (err, page) => {
-      if (page) {
-        req.flash("danger", "Page slug exist, choose another.");
-        res.render("admin/addPage", {
-          title,
-          slug,
-          content
+    Product.findOne({ slug: slug }, (err, product) => {
+      if (product) {
+        req.flash("danger", "Product title exist, choose another.");
+        Category.find((err, categories) => {
+          res.render("admin/addProduct", {
+            title,
+            desc,
+            price,
+            image: imageFile,
+            categories
+          });
         });
       } else {
-        var page = new Page({
+        var priceEdited = parseFloat(price).toFixed(2);
+        var product = new Product({
           title,
           slug,
-          content,
-          sorting: 100
+          desc,
+          price: priceEdited,
+          category,
+          image: imageFile
         });
-        page.save(err => {
+        product.save(err => {
           if (err) return console.log(err);
-          req.flash("success", "Page added successfully!");
-          res.redirect("/admin/pages");
+
+          mkdirp.sync("./public/productImages/" + product._id);
+
+          mkdirp.sync("./public/productImages/" + product._id + "/gallary");
+
+          mkdirp.sync(
+            "./public/productImages/" + product._id + "/gallary/thumbs"
+          );
+
+          if (imageFile != "") {
+            var prodImg = req.files.image;
+            // var path = `public/productImages/${product._id}/${imageFile}`;
+
+            prodImg.mv(
+              `public/productImages/${product._id}/${imageFile}`,
+              err => {
+                if (err) {
+                  return res.status(500).json({
+                    err
+                  });
+                }
+                return res.status(200).json({
+                  upload: "Done!"
+                });
+              }
+            );
+          }
         });
+        req.flash("success", "Product added successfully!");
+        res.redirect("/admin/products");
       }
     });
   }
