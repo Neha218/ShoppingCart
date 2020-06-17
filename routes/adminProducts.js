@@ -112,10 +112,10 @@ router.post("/addproduct", (req, res) => {
 
           mkdirp.sync("./public/productImages/" + product._id);
 
-          mkdirp.sync("./public/productImages/" + product._id + "/gallary");
+          mkdirp.sync("./public/productImages/" + product._id + "/gallery");
 
           mkdirp.sync(
-            "./public/productImages/" + product._id + "/gallary/thumbs"
+            "./public/productImages/" + product._id + "/gallery/thumbs"
           );
 
           if (imageFile != "") {
@@ -145,84 +145,109 @@ router.post("/addproduct", (req, res) => {
 });
 
 /*
- * Post reorder pages
+ * Get edit product
  */
-router.post("/reorderpage", (req, res) => {
-  var ids = req.body["id[]"];
-  var count = 0;
-  for (var i = 0; i < ids.length; i++) {
-    var id = ids[i];
-    count++;
-    (count => {
-      Page.findById(id, (err, page) => {
-        page.sorting = count;
-        page.save(err => {
-          if (err) return console.log(err);
-        });
-      });
-    })(count);
-  }
-});
+router.get("/editproduct/:id", (req, res) => {
+  var errors;
+  if (req.session.errors) errors = req.session.errors;
+  req.session.errors = null;
 
-/*
- * Get edit page
- */
-router.get("/editpage/:id", (req, res) => {
-  Page.findById(req.params.id, (err, page) => {
-    if (err) return console.log(err);
-    res.render("admin/editPage", {
-      title: page.title,
-      slug: page.slug,
-      content: page.content,
-      id: page._id
+  Category.find((err, categories) => {
+    Product.findById(req.params.id, (err, prod) => {
+      if (err) {
+        console.log(err);
+        res.redirect("/admin/products");
+      } else {
+        var galleryDir = `public/productImages/${prod._id}/gallery`;
+        var galleryImages = null;
+
+        fs.readdir(galleryDir, (err, files) => {
+          if (err) console.log(err);
+          else {
+            galleryImages = files;
+
+            res.render("admin/editProduct", {
+              title: prod.title,
+              errors,
+              desc: prod.desc,
+              categories,
+              category: prod.category.replace(/\s+/g, "-").toLowerCase(),
+              price: parseFloat(prod.price).toFixed(2),
+              image: prod.image,
+              galleryImages,
+              id: prod._id
+            });
+          }
+        });
+      }
     });
   });
 });
 
 /*
- * Post edit page
+ * Post edit product
  */
-router.post("/editpage/:id", (req, res) => {
+router.post("/editproduct/:id", (req, res) => {
+  if (!req.files) {
+    imageFile = "";
+  }
+  if (req.files) {
+    var imageFile =
+      typeof req.files.image !== "undefined" ? req.files.image.name : "";
+  }
+
   req.checkBody("title", "Title must have a value.").notEmpty();
-  req.checkBody("content", "Content must have a value.").notEmpty();
+  req.checkBody("desc", "Description must have a value.").notEmpty();
+  req.checkBody("price", "Price must have a value.").isDecimal();
+  req.checkBody("image", "You must uplaod an image.").isImage(imageFile);
 
   var title = req.body.title;
-  var slug = req.body.slug;
-  if (slug == "") slug = title.replace(/\s+/g, "-").toLowerCase();
-  var content = req.body.content;
+  var slug = title.replace(/\s+/g, "-").toLowerCase();
+  var desc = req.body.desc;
+  var price = req.body.price;
+  var category = req.body.category;
+  var pimage = req.body.pimage;
   var id = req.params.id;
 
   var errors = req.validationErrors();
-
   if (errors) {
-    res.render("admin/editPage", {
-      errors,
-      title,
-      slug,
-      content,
-      id
-    });
+    req.session.errors = errors;
+    req.redirect(`/admin/products/editproduct/${id}`);
   } else {
-    Page.findOne({ slug: slug, _id: { $ne: id } }, (err, page) => {
-      if (page) {
-        req.flash("danger", "Page slug exist, choose another.");
-        res.render("admin/editPage", {
-          title,
-          slug,
-          content,
-          id
-        });
+    Product.findOne({ slug: slug, _id: { $ne: id } }, (err, prod) => {
+      if (err) return console.log(err);
+      if (prod) {
+        req.flash("danger", "Product title exist, choose another.");
+        res.redirect(`/admin/products/editproduct/${id}`);
       } else {
-        Page.findById(id, (err, page) => {
+        Product.findById(id, (err, prod) => {
           if (err) return console.log(err);
-          page.title = title;
-          page.slug = slug;
-          page.content = content;
+          prod.title = title;
+          prod.slug = slug;
+          prod.desc = desc;
+          prod.price = parseFloat(price).toFixed(2);
+          prod.category = category;
 
-          page.save(err => {
+          if (imageFile != "") {
+            prod.image = imageFile;
+          }
+
+          prod.save(err => {
             if (err) return console.log(err);
-            req.flash("success", "Page edited successfully!");
-            res.redirect("/admin/pages/editpage/" + id);
+            if (imageFile != "") {
+              if (pimage != "") {
+                fs.remove(`public/productImages/${id}/${pimage}`, err => {
+                  if (err) console.log(err);
+                });
+              }
+              var prodImg = req.files.image;
+              var path = `public/productImages/${id}/${imageFile}`;
+              prodImg.mv(path, err => {
+                return console.log(err);
+              });
+            }
+            req.flash("success", "Product edited successfully!");
+            res.redirect(`/admin/products/editproduct/${id}`);
           });
         });
       }
