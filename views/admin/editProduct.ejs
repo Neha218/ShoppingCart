@@ -88,7 +88,7 @@
     <% if(image != "thumbs") { %>
       <li>
           <img src="/productImages/<%= id %>/gallery/thumbs/<%= image %>" alt="">&nbsp;
-          <a class="confirmDeletion" href="/admin/products/deleteproduct/<%= image %>?id=<%= id %>" >Delete</a>
+          <a class="confirmDeletion" href="/admin/products/deleteimage/<%= image %>?id=<%= id %>" >Delete</a>
       </li>
     <% } %>
   <% }) %>

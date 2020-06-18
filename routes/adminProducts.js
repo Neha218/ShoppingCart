@@ -274,6 +274,27 @@ router.post("/productgallery/:id", (req, res) => {
 });
 
 /*
+ * Get delete image
+ */
+router.get("/deleteimage/:image", (req, res) => {
+  var originalImage = `public/productImages/${req.query.id}/gallery/${req.params.image}`;
+  var thumbImage = `public/productImages/${req.query.id}/gallery/thumbs/${req.params.image}`;
+
+  fs.remove(originalImage, err => {
+    if (err) console.log(err);
+    else {
+      fs.remove(thumbImage, err => {
+        if (err) console.log(err);
+        else {
+          req.flash("success", "Image Deleted!");
+          res.redirect(`/admin/products/editproduct/${req.query.id}`);
+        }
+      });
+    }
+  });
+});
+
+/*
  * Get delete page
  */
 router.get("/deletepage/:id", (req, res) => {
