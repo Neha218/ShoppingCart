@@ -48,6 +48,19 @@ app.use(express.static("public"));
 // Set global errors variable
 app.locals.errors = null;
 
+// Get page model
+Page = require("./models/page");
+
+// Get all pages to pass to header.js
+Page.find({})
+  .sort({ sorting: 1 })
+  .exec((err, pages) => {
+    if (err) console.log(err);
+    else {
+      app.locals.pages = pages;
+    }
+  });
+
 // Express fileUpload middleware
 app.use(fileUpload());
 
