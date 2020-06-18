@@ -295,13 +295,23 @@ router.get("/deleteimage/:image", (req, res) => {
 });
 
 /*
- * Get delete page
+ * Get delete product
  */
-router.get("/deletepage/:id", (req, res) => {
-  Page.findByIdAndRemove(req.params.id, err => {
-    if (err) return console.log(err);
-    req.flash("success", "Page deleted successfully!");
-    res.redirect("/admin/pages/");
+router.get("/deleteproduct/:id", (req, res) => {
+  var id = req.params.id;
+  var path = `public/productImages/${id}`;
+
+  fs.remove(path, err => {
+    if (err) console.log(err);
+    else {
+      Product.findByIdAndRemove(id, err => {
+        if (err) console.log(err);
+        else {
+          req.flash("success", "Product Deleted!");
+          res.redirect("/admin/products");
+        }
+      });
+    }
   });
 });
 
