@@ -126,13 +126,8 @@ router.post("/addproduct", (req, res) => {
               `public/productImages/${product._id}/${imageFile}`,
               err => {
                 if (err) {
-                  return res.status(500).json({
-                    err
-                  });
+                  return console.log(err);
                 }
-                return res.status(200).json({
-                  upload: "Done!"
-                });
               }
             );
           }
@@ -253,6 +248,29 @@ router.post("/editproduct/:id", (req, res) => {
       }
     });
   }
+});
+
+/*
+ * Post product gallery
+ */
+router.post("/productgallery/:id", (req, res) => {
+  var prodImg = req.files.file;
+  var id = req.params.id;
+  var path = `public/productImages/${id}/gallery/${req.files.file.name}`;
+  var thumbsPath = `public/productImages/${id}/gallery/thumbs/${req.files.file.name}`;
+
+  prodImg.mv(path, err => {
+    if (err) console.log(err);
+
+    resizeImg(fs.readFileSync(path), { width: 100, height: 100 })
+      .then(buf => {
+        fs.writeFile(thumbsPath, buf);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  });
+  res.sendStatus(200);
 });
 
 /*
