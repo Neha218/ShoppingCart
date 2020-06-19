@@ -18,19 +18,18 @@ router.get("/", (req, res) => {
 });
 
 /*
- *  Get a page
+ *  Get products by category
  */
-router.get("/:slug", (req, res) => {
-  var slug = req.params.slug;
-  Page.findOne({ slug: slug }, (err, page) => {
-    if (err) console.log(err);
-    if (!page) res.redirect("/");
-    else {
-      res.render("index", {
-        title: page.title,
-        content: page.content
+router.get("/:category", (req, res) => {
+  var categorySlug = req.params.category;
+  Category.findOne({ slug: categorySlug }, (err, category) => {
+    Product.find({ category: categorySlug }, (err, products) => {
+      if (err) console.log(err);
+      res.render("catProducts", {
+        title: category.title,
+        products
       });
-    }
+    });
   });
 });
 
