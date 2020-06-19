@@ -145,12 +145,13 @@ app.get("*", (req, res, next) => {
 });
 
 // Set routes
+
 const products = require("./routes/products.js");
 app.use("/products", products);
+const cart = require("./routes/cart.js");
+app.use("/cart", cart);
 const pages = require("./routes/pages.js");
 app.use("/", pages);
-const cart = require("./routes/cart");
-app.use("/cart", cart);
 
 const adminPages = require("./routes/adminPages.js");
 app.use("/admin/pages", adminPages);

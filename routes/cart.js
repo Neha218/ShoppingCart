@@ -17,7 +17,7 @@ router.get("/add/:product", (req, res) => {
         title: slug,
         qty: 1,
         price: parseFloat(product.price).toFixed(2),
-        image: product.image
+        image: "/productImages/" + product._id + "/" + product.image
       });
     } else {
       var cart = req.session.cart;
@@ -36,12 +36,22 @@ router.get("/add/:product", (req, res) => {
           title: slug,
           qty: 1,
           price: parseFloat(product.price).toFixed(2),
-          image: product.image
+          image: "/productImages/" + product._id + "/" + product.image
         });
       }
     }
     req.flash("success", "Product added to the cart!");
     res.redirect("back");
+  });
+});
+
+/*
+ *  Get checkout page
+ */
+router.get("/checkout", (req, res) => {
+  res.render("checkout", {
+    title: "Checkout",
+    cart: req.session.cart
   });
 });
 

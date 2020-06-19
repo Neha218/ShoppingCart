@@ -30,3 +30,7 @@ ul.gallery li {
   display: inline-block;
   list-style-type: none;
 }
+
+table.alignmiddle td {
+  vertical-align: middle !important;
+}
