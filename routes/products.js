@@ -1,14 +1,18 @@
 const express = require("express");
 const router = express.Router();
+
+// Get product model
+var Product = require("../models/product");
+
 /*
- *  Get /
+ *  Get all products
  */
 router.get("/", (req, res) => {
-  Page.findOne({ slug: "home" }, (err, page) => {
+  Product.find((err, products) => {
     if (err) console.log(err);
-    res.render("index", {
-      title: page.title,
-      content: page.content
+    res.render("allProducts", {
+      title: "All Products",
+      products
     });
   });
 });

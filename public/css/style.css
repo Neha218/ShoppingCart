@@ -1,0 +1,13 @@
+img.pimage {
+  width: 140px;
+}
+
+a.productblock {
+  display: inline-block;
+  height: 150px;
+}
+
+.row.products .block {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

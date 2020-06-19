@@ -48,6 +48,17 @@ app.use(express.static("public"));
 // Set global errors variable
 app.locals.errors = null;
 
+// Get category model
+Category = require("./models/category");
+
+// Get all categories to pass to header.js
+Category.find((err, categories) => {
+  if (err) console.log(err);
+  else {
+    app.locals.categories = categories;
+  }
+});
+
 // Get page model
 Page = require("./models/page");
 
@@ -60,17 +71,6 @@ Page.find({})
       app.locals.pages = pages;
     }
   });
-
-// Get category model
-Category = require("./models/category");
-
-// Get all categories to pass to header.js
-Category.find((err, categories) => {
-  if (err) console.log(err);
-  else {
-    app.locals.categories = categories;
-  }
-});
 
 // Express fileUpload middleware
 app.use(fileUpload());
@@ -140,15 +140,15 @@ app.use((req, res, next) => {
 });
 
 // Set routes
+const products = require("./routes/products.js");
+app.use("/products", products);
 const pages = require("./routes/pages.js");
 app.use("/", pages);
 
 const adminPages = require("./routes/adminPages.js");
 app.use("/admin/pages", adminPages);
-
 const adminCategories = require("./routes/adminCategories");
 app.use("/admin/categories", adminCategories);
-
 const adminProducts = require("./routes/adminProducts");
 app.use("/admin/products", adminProducts);
 
