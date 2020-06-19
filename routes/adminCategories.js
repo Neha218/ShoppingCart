@@ -58,6 +58,13 @@ router.post("/addcategory", (req, res) => {
         });
         cat.save(err => {
           if (err) return console.log(err);
+          Category.find((err, categories) => {
+            if (err) console.log(err);
+            else {
+              req.app.locals.categories = categories;
+            }
+          });
+
           req.flash("success", "Category added successfully!");
           res.redirect("/admin/categories");
         });
@@ -114,6 +121,13 @@ router.post("/editcategory/:id", (req, res) => {
 
           cat.save(err => {
             if (err) return console.log(err);
+            Category.find((err, categories) => {
+              if (err) console.log(err);
+              else {
+                req.app.locals.categories = categories;
+              }
+            });
+
             req.flash("success", "Category edited successfully!");
             res.redirect("/admin/categories/editcategory/" + id);
           });
@@ -129,6 +143,13 @@ router.post("/editcategory/:id", (req, res) => {
 router.get("/deletecategory/:id", (req, res) => {
   Category.findByIdAndRemove(req.params.id, err => {
     if (err) return console.log(err);
+    Category.find((err, categories) => {
+      if (err) console.log(err);
+      else {
+        req.app.locals.categories = categories;
+      }
+    });
+
     req.flash("success", "Category deleted successfully!");
     res.redirect("/admin/categories/");
   });

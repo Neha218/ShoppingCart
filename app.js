@@ -61,6 +61,17 @@ Page.find({})
     }
   });
 
+// Get category model
+Category = require("./models/category");
+
+// Get all categories to pass to header.js
+Category.find((err, categories) => {
+  if (err) console.log(err);
+  else {
+    app.locals.categories = categories;
+  }
+});
+
 // Express fileUpload middleware
 app.use(fileUpload());
 
