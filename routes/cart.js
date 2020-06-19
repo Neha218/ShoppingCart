@@ -49,10 +49,49 @@ router.get("/add/:product", (req, res) => {
  *  Get checkout page
  */
 router.get("/checkout", (req, res) => {
-  res.render("checkout", {
-    title: "Checkout",
-    cart: req.session.cart
-  });
+  if (req.session.cart && req.session.cart.length == 0) {
+    delete req.session.cart;
+    res.redirect("/cart/checkout");
+  } else {
+    res.render("checkout", {
+      title: "Checkout",
+      cart: req.session.cart
+    });
+  }
+});
+
+/*
+ *  Get update product
+ */
+router.get("/update/:product", (req, res) => {
+  var slug = req.params.product;
+  var cart = req.session.cart;
+  var action = req.query.action;
+  console.log("action: ", action);
+  for (var i = 0; i < cart.length; i++) {
+    if (cart[i].title == slug) {
+      switch (action) {
+        case "add":
+          console.log("Enter add switch");
+          cart[i].qty++;
+          break;
+        case "remove":
+          cart[i].qty--;
+          if (cart[i].qty < 1) cart.splice(i, 1);
+          break;
+        case "clear":
+          cart.splice(i, 1);
+          if (cart.length == 0) delete req.session.cart;
+          break;
+        default:
+          console.log("Update Problem");
+          break;
+      }
+      break;
+    }
+  }
+  req.flash("success", "Cart Updated");
+  res.redirect("/cart/checkout");
 });
 
 // Exports
