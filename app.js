@@ -139,11 +139,18 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get("*", (req, res, next) => {
+  res.locals.cart = req.session.cart;
+  next();
+});
+
 // Set routes
 const products = require("./routes/products.js");
 app.use("/products", products);
 const pages = require("./routes/pages.js");
 app.use("/", pages);
+const cart = require("./routes/cart");
+app.use("/cart", cart);
 
 const adminPages = require("./routes/adminPages.js");
 app.use("/admin/pages", adminPages);

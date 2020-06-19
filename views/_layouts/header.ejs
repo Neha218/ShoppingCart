@@ -33,7 +33,7 @@
       </button>
 
       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto">
+        <ul class="nav navbar-nav mr-auto">
           <% pages.forEach((page) => { %>
             <% if(page.slug == "home"){ %>
               <li class="nav-item"><a class="nav-link" href="/"><%= page.title %></a></li>
@@ -41,6 +41,18 @@
               <li class="nav-item"><a class="nav-link" href="<%= page.slug %>"><%= page.title %></a></li>
             <% } %>
           <% }) %>
+        </ul>
+
+        <ul class="nav navbar-nav">
+          <li>
+            <a class="nav-link" href="/cart/checkout">My Cart(
+              <% if(typeof cart !== "undefined") { %>
+                <%= cart.length %>
+              <% } else { %>
+                0
+              <% } %>
+            )</a>
+          </li>
         </ul>
         <!-- <form class="form-inline my-2 my-lg-0">
           <input
