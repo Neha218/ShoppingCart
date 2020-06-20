@@ -61,8 +61,15 @@
               <% } %>
             )</a>
           </li>
+          <% if(user) { %>
+          <li><a class="nav-link" href="/users/logout">Hi, <%= user.username %> (logout)</a></li>
+          <% } else { %>
           <li><a class="nav-link" href="/users/register">Register</a></li>
           <li><a class="nav-link" href="/users/login">Login</a></li>
+          <% } %>
+          <% if(user && user.username == "admin") { %>
+          <li><a class="nav-link" href="/admin/pages">Admin Area</a></li>
+          <% } %>
         </ul>
         <!-- <form class="form-inline my-2 my-lg-0">
           <input
