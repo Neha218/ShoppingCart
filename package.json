@@ -16,6 +16,7 @@
     "mkdirp": "^1.0.4",
     "mongoose": "^5.9.18",
     "mv": "^2.1.1",
+    "paypal-rest-sdk": "^1.8.1",
     "resize-img": "^2.0.0"
   },
   "devDependencies": {},

@@ -43,7 +43,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 // Set static folder
-app.use(express.static("public"));
+app.use(express.static("./public"));
 
 // Set global errors variable
 app.locals.errors = null;

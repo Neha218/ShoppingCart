@@ -31,7 +31,7 @@
   <% }) %>
   <tr>
     <td colspan="6" align="right">
-      <b>Total: </b>$<%= parseFloat(total).toFixed(2) %>
+      <b>Total: </b>Rs. <%= parseFloat(total).toFixed(2) %>
     </td>
   </tr>
   <tr>
@@ -43,6 +43,35 @@
     </td>
   </tr>
 </table>
+
+<!-- Paypal form -->
+<form class="pay" action="https://api.sandbox.paypal.com/" method="post">
+  <input type="hidden" name="cmd" value="_cart" />
+  <input type="hidden" name="uplaod" value="1" />
+
+  <input
+    type="hidden"
+    name="business"
+    value="sb-cnzki2351032@business.example.com"
+  />
+  <% var num = 0 %> <% cart.forEach((cartItem) => { %> <% num++ %>
+  <input
+    type="hidden"
+    name="item_name_<%= num %>"
+    value="<%= cartItem.title %>"
+  />
+  <input type="hidden" name="amount_<%= num %>" value="<%= cartItem.price %>" />
+  <input type="hidden" name="quantity_<%= num %>" value="<%= cartItem.qty %>" />
+  <% }) %>
+  <input type="hidden" name="currency_code" value="USD" />
+  <input type="hidden" name="amount" value="<%= total %>" />
+  <input
+    type="image"
+    src="http://www.paypal.com/en_US/i/btn/x-click-but01.gif"
+    name="submit"
+    alt="Make payments with PayPal - it's fast, free and secure!"
+  />
+</form>
 
 <% } else { %>
 <h3 class="text-center">Your cart is empty.</h3>
