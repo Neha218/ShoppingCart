@@ -148,6 +148,7 @@ app.use(passport.session());
 
 app.get("*", (req, res, next) => {
   res.locals.cart = req.session.cart;
+  res.locals.user = req.user || null;
   next();
 });
 
@@ -159,6 +160,8 @@ const products = require("./routes/products.js");
 app.use("/products", products);
 const cart = require("./routes/cart.js");
 app.use("/cart", cart);
+const users = require("./routes/users");
+app.use("/users", users);
 const pages = require("./routes/pages.js");
 app.use("/", pages);
 
