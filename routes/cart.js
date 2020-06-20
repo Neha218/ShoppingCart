@@ -104,5 +104,13 @@ router.get("/clear", (req, res) => {
   res.redirect("/cart/checkout");
 });
 
+/*
+ *  Get buy now
+ */
+router.get("/buynow", (req, res) => {
+  delete req.session.cart;
+  res.sendStatus(200);
+});
+
 // Exports
 module.exports = router;

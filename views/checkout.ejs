@@ -39,21 +39,21 @@
       <a class="clearcart btn btn-danger" href="/cart/clear">Clear Cart</a>
     </td>
     <td colspan="5" align="right">
-      <a class="btn btn-primary buynow" href="#">Buy Now</a>
+      <a class="buynow btn btn-primary" href="/cart/buynow">Buy Now</a>
     </td>
   </tr>
 </table>
 
 <!-- Paypal form -->
-<form class="pay" action="https://api.sandbox.paypal.com/" method="post">
+<form
+  class="pay"
+  action="https://www.sandbox.paypal.com/cgi-bin/websrc"
+  method="post"
+>
   <input type="hidden" name="cmd" value="_cart" />
   <input type="hidden" name="uplaod" value="1" />
 
-  <input
-    type="hidden"
-    name="business"
-    value="sb-cnzki2351032@business.example.com"
-  />
+  <input type="hidden" name="business" value="nbsshoppingmerchant@gmail.com" />
   <% var num = 0 %> <% cart.forEach((cartItem) => { %> <% num++ %>
   <input
     type="hidden"
@@ -81,6 +81,14 @@
   $(function() {
     $("a.clearcart").on("click", () => {
       if (!confirm("Confirm Clear Cart!")) return false;
+    });
+
+    $("a.buynow").on("click", e => {
+      e.preventDefault();
+      $.get("/cart/buynow", () => {
+        $("form.pay input[type=image]").click();
+        $(".ajaxbg").show();
+      });
     });
   });
 </script>

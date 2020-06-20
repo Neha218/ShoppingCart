@@ -146,6 +146,8 @@ app.get("*", (req, res, next) => {
 
 // Set routes
 
+const payment = require("./routes/payment.js");
+app.use("/payment", payment);
 const products = require("./routes/products.js");
 app.use("/products", products);
 const cart = require("./routes/cart.js");
