@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const expressValidator = require("express-validator");
 const fileUpload = require("express-fileupload");
+const passport = require("passport");
 
 const config = require("./config/database");
 
@@ -138,6 +139,12 @@ app.use((req, res, next) => {
   res.locals.messages = require("express-messages")(req, res);
   next();
 });
+
+// Passport config
+require("./config/passport")(passport);
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get("*", (req, res, next) => {
   res.locals.cart = req.session.cart;
