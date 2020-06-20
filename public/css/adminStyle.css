@@ -34,3 +34,7 @@ ul.gallery li {
 table.alignmiddle td {
   vertical-align: middle !important;
 }
+/* 
+table.alignmiddle img {
+  width: 100px;
+} */
